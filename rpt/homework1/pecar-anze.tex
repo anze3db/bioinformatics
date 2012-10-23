@@ -1,35 +1,30 @@
-% To je predloga za poročila o domačih nalogah pri predmetih, katerih
-% nosilec je Blaž Zupan. Seveda lahko tudi dodaš kakšen nov, zanimiv
-% in uporaben element, ki ga v tej predlogi (še) ni. Več o LaTeX-u izveš na
-% spletu, na primer na http://tobi.oetiker.ch/lshort/lshort.pdf.
+% Homework report template for courses lectured by Blaz Zupan.
+% For more on LaTeX please consult its documentation pages, or
+% read tutorials like http://tobi.oetiker.ch/lshort/lshort.pdf.
 %
-% To predlogo lahko spremeniš v PDF dokument s pomočjo programa
-% pdflatex, ki je del standardne instalacije LaTeX programov.
+% Use pdflatex to produce a PDF of a report.
 
 \documentclass[a4paper,11pt]{article}
 \usepackage{a4wide}
 \usepackage{fullpage}
 \usepackage[utf8x]{inputenc}
-\usepackage[slovene]{babel}
-\selectlanguage{slovene}
 \usepackage[toc,page]{appendix}
-\usepackage[pdftex]{graphicx} % za slike
+\usepackage[pdftex]{graphicx} % for figures
 \usepackage{setspace}
 \usepackage{color}
 \definecolor{light-gray}{gray}{0.95}
-\usepackage{listings} % za vključevanje kode
+\usepackage{listings} % for inclusion of Python code
 \usepackage{hyperref}
-\renewcommand{\baselinestretch}{1.2} % za boljšo berljivost večji razmak
-\renewcommand{\appendixpagename}{Priloge}
+\renewcommand{\baselinestretch}{1.2}
 
-\lstset{ % nastavitve za izpis kode, sem lahko tudi kaj dodaš/spremeniš
+\lstset{ % style for Python code, improve if needed
 language=Python,
 basicstyle=\footnotesize,
 basicstyle=\ttfamily\footnotesize\setstretch{1},
 backgroundcolor=\color{light-gray},
 }
 
-\title{Prva domača naloga}
+\title{Homework \#1: Human Mitochondrion}
 \author{Anže Pečar (63060257)}
 \date{\today}
 
@@ -37,101 +32,52 @@ backgroundcolor=\color{light-gray},
 
 \maketitle
 
-\section{Uvod}
+\section{Introduction}
 
-\section{Podatki}
+In the first homework we analyse the human mitochondrial DNA sequence.   
 
-\section{Metode}
+\section{Data}
+
+Data was obtained from GenBank and is represented in FASTA format. In FASTA format nucleotides are represented using single letter codes (A, T, C and G). FASTA format defines many other letters of which only the letter N was present in our data. N can represent aNy nucleotide, but because there was only one such occurrence present, we simply ignore it. 
+
+\section{Methods}
+
+
 
 %\begin{figure}[htbp]
 %\begin{center}
-%\includegraphics[scale=0.3]{slika-primer.png}
-%\caption{Vsako sliko opremi s podnapisom, ki pove, kaj slika %prikazuje.}
-%\label{slika1}
+%%\includegraphics[scale=0.3]{figure-example.png}
+%\caption{Every figure should include a caption with a figure description.}
+%\label{fig-example}
 %\end{center}
 %\end{figure}
 
 %\begin{lstlisting}
-%def fib(n):
-%    if n == 0:
-%        return 0
-%    elif n == 1:
-%        return 1
-%    else:
-%        return fib(n-1) + fib(n-2)
 %\end{lstlisting}
 
-\section{Rezultati}
+\section{Results}
 
-V tem poglavju podaš rezultate s kratkim (enoodstavčnim)
-komentarjem. Rezultate lahko prikažeš tudi v tabeli (primer je
-tabela~\ref{tab1}).
-
-Odstavke pri pisanju poročila v LaTeX-u ločiš tako, da pred novim
-odstavkom pustiš prazno vrstico. Tudi, če pišeš poročilo v kakšnem
-drugem urejevalniku, morajo odstavki biti vidno ločeni. To narediš z
-zamikanjem ali pa z dodatnim presledkom.
-
-\begin{table}[htbp]
-\caption{Atributi in njihove zaloge vrednosti.}
-\label{tab1}
-\begin{center}
-\begin{tabular}{llp{3cm}}
-\hline
-ime spremenljivke & definicijsko območje & opis \\
-\hline
-cena & [0, 500] & cena izdelka v EUR\\
-teža & [1, 1000] & teža izdelka v dag \\
-kakovost & [slaba|srednja|dobra] & kakovost izdelka \\
-\hline
-\end{tabular}
-\end{center}
-\end{table}
-
-Podajanje rezultati naj bo primerno strukturirano. Če ima naloga več
-podnalog, uporabi podpoglavja. Če bi želel poročati o rezultatih
-izčrpno in pri tem uporabiti vrsto tabel ali grafov, razmisli o
-varianti, kjer v tem poglavju prikažeš in komentiraš samo glavne
-rezultate, kakšne manj zanimive detajle pa vključite v prilogo (glej
-prilogi~\ref{app-res} in~\ref{app-code}).
-
-\section{Izjava o izdelavi domače naloge}
-Domačo nalogo in pripadajoče programe sem izdelal sam.
-
-\appendix
-\appendixpage
-\section{\label{app-res}Podrobni rezultati poskusov}
-
-Če je rezultatov v smislu tabel ali pa grafov v nalogi mnogo,
-predstavi v osnovnem besedilu samo glavne, podroben prikaz
-rezultatov pa lahko predstaviš v prilogi. V glavnem besedilu ne
-pozabi navesti, da so podrobni rezultati podani v prilogi.
-
-\section{\label{app-code}Programska koda}
-
-Za domače naloge bo tipično potrebno kaj sprogramirati. Če ne bo od
-vas zahtevano, da kodo oddate posebej, to vključite v prilogo. Čisto
-za okus sem tu postavil nekaj kode, ki uporablja Orange
-(\url{http://www.biolab.si/orange}) in razvrščanje v skupine.
+%\begin{table}[htbp]
+%\caption{Data attributes and their values.}
+%\label{tab1}
+%\begin{center}
+%\begin{tabular}{llp{4cm}}
+%\hline
+%name & domain  & description \\
+%\hline
+%price & [0, 500] & item price in EUR\\
+%weight & [1, 1000] & item weight in dag \\
+%quality & [poor|acceptable|good] & quality of an item \\
+%\hline
+%\end{tabular}
+%\end{center}
+%\end{table}
 
 
-\begin{lstlisting}
-import random
-import Orange
+\section*{Honor Code}
 
-data_names = ["iris", "housing", "vehicle"]
-data_sets = [Orange.data.Table(name) for name in data_names]
+% The following paragraph of your report should be included as is - do % not change it.
 
-print "%10s %3s %3s %3s" % ("", "Rnd", "Div", "HC")
-for data, name in zip(data_sets, data_names):
-    random.seed(42)
-    km_random = Orange.clustering.kmeans.Clustering(data, centroids = 3)
-    km_diversity = Orange.clustering.kmeans.Clustering(data, centroids = 3,
-        initialization=Orange.clustering.kmeans.init_diversity)
-    km_hc = Orange.clustering.kmeans.Clustering(data, centroids = 3,
-        initialization=Orange.clustering.kmeans.init_hclustering(n=100))
-    print "%10s %3d %3d %3d" % (name, km_random.iteration, \
-    km_diversity.iteration, km_hc.iteration)
-\end{lstlisting}
+My answers to homework are my own work. I did not make solutions or code available to anyone else. I did not engage in any other activities that will dishonestly improve my results or dishonestly improve/hurt the results of others.
 
 \end{document}

@@ -1,4 +1,7 @@
+import pylab
 from collections import Counter
+from math import log
+from matplotlib import cm
 
 def get_seq():
     """Return  mitochondrial sequences in FASTA format"""
@@ -6,53 +9,23 @@ def get_seq():
     f = open("NC_001416.1.fasta")
     fc = f.read()
     fc = fc.replace('N', '') # TODO: figure out how to handle N (any nucleic acid)
-    return "".join(fc.split("\n")[1:])
+    return list("".join(fc.split("\n")[1:]))
 
-def report_kmers(seq):
-    """Report k-mers probabilities"""
+def print_probability(cn):
+    """Print ordered probabilities"""
     
-    global cnt, c1, c2
-    cnt = len(seq)
-    c1 = Counter(seq)
-    c2 = Counter([l1 + l2 for l1, l2 in zip(seq[:-1], seq[1:])])
+    l = list(cn)
+    l.sort(key=lambda c: cn.get(c), reverse=True) # Sort by number of occurrences
+    s = ""
+    for c in l:
+        s += "%s - %0.2f%%, " % (c, cn.get(c) * 100 / float(sum(cn.values())))
+    print s + "\n"
     
-    def print_probability(cn):
-        """Print ordered probabilities"""
-        
-        l = list(cn)
-        l.sort(key=lambda c: cn.get(c), reverse=True)
-        for c in l:
-            print "%s - %0.2f%%" % (c, cn.get(c) * 100 / float(cnt))
-        print ""
-
-    print_probability(c1)
-    print_probability(c2)
-    
-def calculate_deviations():
-    """Calculate deviations from joint probabilities"""
-    
-    # TODO: Globals, really?
-    global cnt, c1, c2
-    ls = []
-    for c in c2:
-        l = list(c)
-        
-        # TODO: Figure out if k is being calculated correctly 
-        k = 100*(c1.get(l[0])/float(cnt))*c1.get(l[1])/float(cnt)
-        
-        # TODO: Refactor so that c2 percentage isn't being calculated twice
-        ls.append((c, abs(c2.get(c)*100/float(cnt) - k)))
-
-    ls.sort(key=lambda c: c[1], reverse=True)
-    for c in ls:
-        print "%s - %0.2f%%" % (c[0], c[1])
-    print ""
-    
-def report_changes(seq):
+def report_changes(seq, window_size):
     """Report changes of the aggregate frequency of G or C"""
     
-    window_size = 1000
     window_frequence = []
+    
     c = 0
     cnt = 0
     for s in seq:
@@ -64,10 +37,65 @@ def report_changes(seq):
             window_frequence.append(c)
             cnt = 0
             c   = 0
-    print window_frequence
+            
+    return window_frequence
+    
+def graph(window_frequence):        
+    #pylab.bar(range(len(window_frequence)), window_frequence)
+    pass
+def cgr(seq):
+    m = {'A': 0, 'T': 1, 'C': 0, 'G': 1}
+    n = {'A': 0, 'C': 1, 'T': 0, 'G': 1}
+    a,b = 0,0
+    k = len(seq)
+    for i in range(k):
+        a += m[seq[i]] * 2**(k-i-1)
+        b += n[seq[i]] * 2**(k-i-1)
+    
+    return a,b
 
 if __name__ == '__main__':
-    seq = list(get_seq())
-    report_kmers(seq)
-    calculate_deviations()
-    report_changes(seq)
+    
+    seq = get_seq()
+    N = len(seq)
+    
+    # Calculate occurrences for 1-mers and 2-mers:
+    c1 = Counter(seq)
+    c2 = Counter([l1 + l2 for l1, l2 in zip(seq[:-1], seq[1:])])    
+
+    print_probability(c1)
+    print_probability(c2)
+
+    # Calculate deviations:
+    ls = []
+    for c in c2:
+        l = list(c)
+        ls.append((c, log(N * c2.get(c) / float(c1[l[0]] * c1[l[1]]),2)))
+
+    ls.sort(key=lambda c: c[1], reverse=True)
+    s = ""
+    for c in ls:
+        s += "%s - %0.4f, " % (c[0], c[1])
+    print s + "\n"
+    
+    #Report changes on aggregate frequencies:
+    
+    [graph(report_changes(seq, i)) for i in [10,100,1000]]
+    # pylab.show() # TODO: Normalize
+    
+    # Fill up CGR table:
+    seq.reverse()
+    k = 4
+    
+    cgra = []
+    for i in range(16):
+        cgra.append([])
+        for _ in range(16):
+            cgra[i].append(0)
+            
+    for i in range(0, len(seq)-k+1):
+        a,b = cgr(seq[i:i+k])
+        cgra[a][b] += 1
+    
+    pylab.imshow(cgra, interpolation='nearest', cmap = cm.gray)
+    pylab.show()

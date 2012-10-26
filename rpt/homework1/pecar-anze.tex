@@ -119,9 +119,39 @@ I should also note the Genome sequence axis is being sampled for clarity purpose
 Figure \ref{cgr} represents Chaos Game Representation for 3-mers and 4-mers.
 \begin{figure}[h!]
 \begin{center}
-\includegraphics[scale=0.8]{4_cgr.png}
+\includegraphics[scale=0.6]{4_cgr.png}
 \caption{Chaos Game Representation for k = 4 and k = 3.}
 \label{cgr}
+\end{center}
+\end{figure}
+
+\subsection{Additional assignment}
+I have used a basic algorithm for aligning the sequences and got surprisingly good results. The algorithm basically uses a two step lookahead to check if there is a misalignment.
+
+I have compared the outdated versions of human mitochondrial to the latest one. The results are in Table \ref{add}. Figure \ref{addf} contains a bar plot of differences + skips across the files.
+
+\begin{table}[htbp]
+\caption{Differences between human mitochondrial FASTA files. Num skips is the number of realignments performed.}
+\label{add}
+\begin{center}
+\begin{tabular}{lllp{4cm}}
+\hline
+file compared to NC\_012920.1 & num differences  & num skips \\
+\hline
+NC\_001807.1 & 4 & 1\\
+NC\_001807.2 & 1 & 1\\
+NC\_001807.3 & 1 & 0\\
+NC\_001807.4 & 38 & 3\\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.4]{add.png}
+\caption{Differences + skip counts.}
+\label{addf}
 \end{center}
 \end{figure}
 

@@ -3,10 +3,10 @@ from math import log
 from matplotlib import cm
 import pylab
 
-def get_seq():
+def get_seq(fa):
     """Return  mitochondrial sequences in FASTA format"""
 
-    f = open("NC_001416.1.fasta")
+    f = open(fa)
     fc = f.read()
     fc = fc.replace('N', '')  # ignore aNy
     return list("".join(fc.split("\n")[1:]))
@@ -58,7 +58,7 @@ def get_cgra(k):
 
 if __name__ == '__main__':
     
-    seq = get_seq()
+    seq = get_seq("NC_001416.1.fasta")
     N = len(seq)
     
     # Calculate occurrences for 1-mers and 2-mers:

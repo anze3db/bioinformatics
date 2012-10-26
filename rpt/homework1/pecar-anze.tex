@@ -41,48 +41,89 @@ In the first homework we analyse the human mitochondrial DNA sequence.
 Data was obtained from GenBank and is given in FASTA format. In FASTA nucleotides are represented using single letter codes (A, T, C and G). FASTA format defines many other letters of which only the letter N was present in our data. N can represent aNy nucleotide, but because there was only one such occurrence, we simply ignore it. 
 
 \section{Methods}
+One of the most fundamental properties of a genome sequence is its base composition. We obtain the frequency of each base by counting the number of each type of base and divide by the total length of the genome. We perform both operations on only one strand of the DNA sequence, because we can automatically obtain the frequencies for the other strand from the first one. This is possible because of the complementarity of the double helix.
 
+We can measure local base composition by sliding window of size k (in our example k was either 10, 100 or 1000). Smaller window sizes reveal a higher variance in base composition, and larger window may miss small regions with different base composition.
 
+Instead of stating probabilities for all for 4 bases, usually only the GC content is given. This is done because the probability of G and C is often similar and we can derive AT content from GC content ($1 - GC = AT$). 
 
-%\begin{figure}[htbp]
-%\begin{center}
-%%\includegraphics[scale=0.3]{figure-example.png}
-%\caption{Every figure should include a caption with a figure description.}
-%\label{fig-example}
-%\end{center}
-%\end{figure}
-
-%\begin{lstlisting}
-%\end{lstlisting}
+Chaos Game Representation color-codes observed frequencies and makes it easier to see patterns. For each nucleotide we move and mark the new location which is halfway between the current location and the nucleotide.
 
 \section{Results}
 
 \subsection{Probabilities for k-mers}
-\begin{lstlisting}
-C - 31.29%, A - 30.97%, T - 24.69%, G - 13.05%, 
+I have listed 1-mers and 2-mers with their corresponding percanteges in the Table \ref{kmers}. Please note that I have only listed the top 10 most frequent 2-mers.
+\begin{table}[htbp]
+\caption{Results for probabilities of 1-mers and 2-mers.}
+\label{kmers}
+\begin{center}
+\begin{tabular}{lllp{4cm}}
+\hline
+1-mers & percentage  & 2-mers & percentage \\
+\hline
+C & 31.29\% & CC & 10.71\%\\
+A & 30.97\% & AA & 9.72\%\\
+T & 24.69\% & CA & 9.26\%\\
+G & 13.05\% & AC & 9.03\%\\
+ &  & CT & 9.03\%\\
+ &  & TA & 8.30\%\\
+ &  & AT & 7.42\%\\
+ &  & TC & 7.25\%\\
+ &  & TT & 6.05\%\\
+ &  & AG & 4.81\%\\
 
-CC - 10.71%, AA - 9.72%, CA - 9.26%, AC - 9.03%, CT - 8.70%, TA - 8.30%, 
-AT - 7.42%, TC - 7.25%, TT - 6.05%, AG - 4.81%, GC - 4.30%, GA - 3.70%, 
-TG - 3.09%, CG - 2.62%, GT - 2.52%, GG - 2.52%, 
+\hline
+\end{tabular}
+\end{center}
+\end{table}
 
-\end{lstlisting}
+\subsection{2-mers by their deviation}
+I have listed 2-mers and their deviations from expected probabilities in Table \ref{deviations}.
+\begin{table}[htbp]
+\caption{Results for 2-mers by their deviation}
+\label{deviations}
+\begin{center}
+\begin{tabular}{lp{4cm}}
+\hline
+2-mers & deviation from expected probability\\
+\hline
+CG & 0.6376\\
+GG & 0.5662\\
+GT & 0.3536\\
+AG & 0.2499\\
+CT & 0.1712\\
+CC & 0.1297\\
+GA & 0.1262\\
 
-%\begin{table}[htbp]
-%\caption{Data attributes and their values.}
-%\label{tab1}
-%\begin{center}
-%\begin{tabular}{llp{4cm}}
-%\hline
-%name & domain  & description \\
-%\hline
-%price & [0, 500] & item price in EUR\\
-%weight & [1, 1000] & item weight in dag \\
-%quality & [poor|acceptable|good] & quality of an item \\
-%\hline
-%\end{tabular}
-%\end{center}
-%\end{table}
 
+
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\subsection{Changes of aggregate frequency}
+Changes in aggregate frequency are listed in Figure \ref{log}. The G or C frequency axis is in logarithmic scale to make the different sized windows easier to see. Instead of a logarithmic scale I have also tried normalizing the frequency values, but because the resulting figure was not as clear as this one I have not included it. 
+
+I should also note the Genome sequence axis is being sampled for clarity purposes. I have found that by taking only every 50th nucleotide I still retain most of the graph characteristics but making it clearer. 
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.65]{3_log_all.png}
+\caption{Red line - window size = 1000, green - window size 100, blue line - window size = 10.}
+\label{log}
+\end{center}
+\end{figure}
+
+\subsection{Chaos Game Representation}
+Figure \ref{cgr} represents Chaos Game Representation for 3-mers and 4-mers.
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.8]{4_cgr.png}
+\caption{Chaos Game Representation for k = 4 and k = 3.}
+\label{cgr}
+\end{center}
+\end{figure}
 
 \section*{Honor Code}
 

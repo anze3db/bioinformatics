@@ -1,6 +1,6 @@
 from collections import Counter
 from math import log
-from matplotlib import cm
+#from matplotlib import cm
 import pylab
 
 def get_seq(fa):
@@ -101,12 +101,12 @@ if __name__ == '__main__':
     
     cgra = get_cgra(k)
     
-    pylab.imshow(cgra, interpolation='nearest', cmap=cm.gray_r)
+    #pylab.imshow(cgra, interpolation='nearest', cmap=cm.gray_r)
     k = 3
     pylab.subplot(122, aspect='equal')
     pylab.title("CGR (k = 3)")
     
     cgra = get_cgra(k)
     
-    pylab.imshow(cgra, interpolation='nearest', cmap=cm.gray_r)
+    #pylab.imshow(cgra, interpolation='nearest', cmap=cm.gray_r)
     pylab.show()

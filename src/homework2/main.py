@@ -27,8 +27,25 @@ def codon_walk(seq, offset, length=3):
     for i in xrange(offset, len(seq) - (len(seq) - offset) % length, length):
         yield i, seq[i:i + length]
 
+
+def load_entrez(genome):
+    import os.path
+    if not os.path.isfile(genome + '.pickle'):
+        from Bio import Entrez
+        from Bio import SeqIO
+        handle = Entrez.efetch(db="nucleotide", rettype="gb", id=genome, email="smotko@smotko.si")
+        rec = SeqIO.read(handle, "gb")
+        handle.close()
+        dump(rec, file(genome + '.pickle', 'w'))
+    
+    return load(file(genome + '.pickle'))
+
+
 if __name__ == "__main__":
-    seq = get_seq('NC_006058.1.fasta')
+    
+    genome = 'NC_007346'
+    #genome = 'NC_006058'
+    seq = get_seq(genome+'.1.fasta')
     ris = rev_inv(seq)
     
     stop_codon = {"TGA"}
@@ -55,15 +72,7 @@ if __name__ == "__main__":
     print "%s without filtering" % len(orfs)
     print "%s ORFs code for at least 60 amino acids" % sum(1 for g in orfs if len(g["strand"]) > 180)
     
-#    from Bio import Entrez
-#    from Bio import SeqIO
-#    handle = Entrez.efetch(db="nucleotide", rettype="gb", id='NC_006058', email="smotko@smotko.si")
-#    rec = SeqIO.read(handle, "gb")
-#    handle.close()
-#    
-#    dump(rec, file('NC_006058.pickle', 'w'))
-    
-    rec = load(file('NC_006058.pickle'))
+    rec = load_entrez(genome)
     original = set(f.location.start.position for f in rec.features if f.type == "CDS")
 
     scale = range(0, 500, 3)

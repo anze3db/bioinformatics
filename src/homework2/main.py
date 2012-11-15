@@ -32,6 +32,7 @@ if __name__ == "__main__":
     reverse = False
     for s in (seq, ris):
         for frame in range(3):
+            orf_start = False
             for i, codon in codon_walk(s, frame):
                 if not orf_start and codon in start_codon:
                     orf_start = i
@@ -42,7 +43,8 @@ if __name__ == "__main__":
                         orfs.append({"strand": s[orf_start:i+3], "start":orf_start, "end": i+3, "reverse": reverse })
                     orf_start = False
         reverse = True
-    print "%s ORF codes with at least 60 amino acids" % sum(1 for g in orfs if len(g["strand"])>=60)
+    print "%s without filtering" % len(orfs)
+    print "%s ORF codes with at least 60 amino acids" % sum(1 for g in orfs if len(g["strand"])>180)
     
 #    from Bio import Entrez
 #    from Bio import SeqIO
@@ -56,7 +58,8 @@ if __name__ == "__main__":
     for o in orfs:
         for f in rec.features:
             if f.type == "CDS":
-                if o["start"] == f.location.start.position and o["end"] == f.location.end.position and o["reverse"] == [True, False][(f.strand+1)/2]:
+                #if o["strand"] == seq[f.location.start.position:f.location.end.position]:
+                if o["start"] == f.location.start.position:
                     match.append({"calculated": o["strand"], "original": seq[f.location.start.position:f.location.end.position]})
                 continue
                 print len(seq[f.location.start.position:f.location.end.position]), seq[f.location.start.position:f.location.end.position]
@@ -64,12 +67,12 @@ if __name__ == "__main__":
                 print "end", f.location.end.position
                 print "strand", ["-", "+" ][(f.strand+1)/2]
                 print
-    
+    #dump(orfs, file('orfs.pickle', 'w'))
     min_len = 9999999999
     for m in match:
         if len(m["original"]) < min_len:
             min_len = len(m["original"])
-        print "or", m["original"]
-        print "ca", m["calculated"]
+        #print "or", m["original"]
+        #print "ca", m["calculated"]
     print "matched: ", len(match), "60>", sum(1 for g in orfs if len(g["strand"])>=60) 
     print min_len, float(min_len)/sum(1 for g in orfs if len(g["strand"])>=280), float(min_len)/sum(1 for g in orfs if len(g["strand"])>=60) 

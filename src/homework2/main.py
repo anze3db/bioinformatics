@@ -91,7 +91,7 @@ if __name__ == "__main__":
     pylab.title("Precision and recall as a function of minimum ORF length")
     pylab.show()
 
-    # PREC & RECALL FOR 150 codons:
+    # PREC & RECALL FOR 125 codons:
     scale = 125
     predictions = set(g['start'] for g in orfs if len(g['strand']) > scale * 3)
     TP = len(predictions.intersection(original))

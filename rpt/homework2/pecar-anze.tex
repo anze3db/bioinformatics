@@ -34,11 +34,11 @@ backgroundcolor=\color{light-gray},
 
 \section{Introduction}
 
-In the second homework we analyse the genomic sequence of \textit{Paramecium tetraurelia}.
+In the second homework we analyse the genomic sequence of \textit{Paramecium tetraurelia} and \textit{Emiliania huxleyi virus 86}.
 
 \section{Data}
 
-Data was obtained from GenBank \textit{Nucleotide NC\_006058.1}. This time we were interested in protein coding genes. In the GenBank database this relates to CDS feature type.
+Data was obtained from GenBank \textit{Nucleotide NC\_006058.1} and \textit{Nucleotide NC\_007346}. This time we were interested in protein coding genes. In the GenBank database this relates to CDS feature type.
 
 \section{Methods}
 
@@ -49,7 +49,7 @@ Data was obtained from GenBank \textit{Nucleotide NC\_006058.1}. This time we we
 5081 ORFs code for at least 60 amino acids.
 
 \subsection{Precision and recall}
-
+In Figure \ref{precrec} we can see how precision and recall change depending on the minimum ORF length.
 \begin{figure}[h!]
 \begin{center}
 \includegraphics[scale=0.65]{precision-recall.png}
@@ -60,6 +60,22 @@ Data was obtained from GenBank \textit{Nucleotide NC\_006058.1}. This time we we
 
 \subsection{Precision and recall for 125 codons or more}
 0.1026 precision, 0.4017 recall
+
+\subsection*{Emiliania huxleyi virus 86}
+
+\subsubsection{Detecting ORFs}
+2264 ORFs code for at least 60 amino acids.
+
+\subsubsection{Precision and recall}
+In Figure \ref{precrec2} we can see how precision and recall change depending on the minimum ORF length.
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[scale=0.65]{precision-recall2.png}
+\caption{Blue line = precision. Green line = recall.}
+\label{precrec2}
+\end{center}
+\end{figure}
+0.1254 precision, 0.2691 recall 
 
 \section*{Honor Code}
 

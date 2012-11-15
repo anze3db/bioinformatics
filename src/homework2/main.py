@@ -53,7 +53,7 @@ if __name__ == "__main__":
                     orf_start = False
         reverse = True
     print "%s without filtering" % len(orfs)
-    print "%s ORF codes with at least 60 amino acids" % sum(1 for g in orfs if len(g["strand"]) > 180)
+    print "%s ORFs code for at least 60 amino acids" % sum(1 for g in orfs if len(g["strand"]) > 180)
     
 #    from Bio import Entrez
 #    from Bio import SeqIO

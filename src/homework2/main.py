@@ -36,7 +36,7 @@ def load_entrez(genome):
 
 
 if __name__ == "__main__":
-    
+
     genome = 'NC_006058'
     #genome = 'NC_007346'
     

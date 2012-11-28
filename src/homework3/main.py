@@ -55,15 +55,14 @@ if __name__ == '__main__':
         "id" : "NC_014692.1",
         "name" : "Boar"
     }, {
-        "id" : "NC_018038.1",
-        "name" : "Goldfish"
-    }, {
         "id" : "NC_004299.1",
         "name" : "Pufferfish"
     }]
+    cox = []
     for a in animals:
         rec = load_entrez(a["id"])
         for f in rec.features:
             if f.type == "CDS":
-                print "Name", f.qualifiers["gene"][0]
-                print "Amino acid sequence", f.qualifiers["translation"]
+                if f.qualifiers['gene'][0] == "COX3":
+                    cox.append(f.qualifiers["translation"][0])
+    print cox

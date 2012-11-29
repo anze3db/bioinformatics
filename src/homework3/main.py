@@ -1,6 +1,7 @@
 from collections import defaultdict
 from scipy.cluster.hierarchy import dendrogram, linkage
-from itertools import chain
+import os.path
+from cPickle import dump, load
 
 animals = [{
         "id": "NC_002008.4",
@@ -10,7 +11,7 @@ animals = [{
         "name" : "Goldfish"
     }, {
         "id" : "NC_012420.1",
-        "name" : "Veiled Chameleon"
+        "name" : "Chameleon"
     }, {
         "id" : "NC_011391.1",
         "name" : "Daboia"
@@ -56,8 +57,7 @@ def blosum50():
 
 def load_entrez(genome):
     """Reads Entrez data from a .pickle file. If the file does not exist it is created"""
-    import os.path
-    from cPickle import dump, load
+    
     if not os.path.isfile(genome + '.pickle'):
         from Bio import Entrez
         from Bio import SeqIO
@@ -108,7 +108,8 @@ def dpt(s,t):
 
 def latex_table():
     table = [[str(dpt(cox[i], cox[j])) for j in range(0, len(cox))] for i in range(len(cox))]
-    print "".join([" & %d. " % (i+1) for i in range(len(animals))])
+    print "".join([" & %d. " % (i+1) for i in range(len(animals))]) + '\\\\'
+    print "\\hline"
     rows = [" & ".join(i) for i in table]
     for i,ri in enumerate(rows):
         print str(i+1)+". " + animals[i]['name'] + " & " + ri + '\\\\'
@@ -118,12 +119,19 @@ if __name__ == '__main__':
     cox = cox3()
     blosum = blosum50()
     
+    #print latex_table()
     
-    print latex_table()
+    if not os.path.isfile('result.pickle'):
+        dist = ([[dpt(cox[i], cox[j]) for j in range(len(cox))] for i in range(len(cox))])
+        dump(dist, file('result.pickle', 'w'))
+    dist = load(file('result.pickle'))
     
-    #dist = list(chain.from_iterable([[dpt(cox[i], cox[j]) for j in range(i+1, len(cox))] for i in range(len(cox))]))
+    
 
     import pylab
-    dendrogram(linkage(dist, 'average'), 15, labels = [a['name'] for a in animals]) 
+    dendrogram(linkage(dist, 'average'), 30, labels = [a['name'] for a in animals], orientation = "left", color_threshold=300) 
+    pylab.xlabel("Alignment score")
+    pylab.ylabel("Species")
+    pylab.title("Evolutionary Tree")
     pylab.show()
     

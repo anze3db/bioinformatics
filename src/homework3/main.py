@@ -84,8 +84,8 @@ def cox3():
 def dpt(s,t):
     def cost():
         M[i,j] = max(
-            M[i-1,j]+gp,
-            M[i,j-1]+gp,
+            M[i-1,j]+gap,
+            M[i,j-1]+gap,
             M[i-1,j-1] + blosum[si, tj]
         )
         
@@ -94,12 +94,11 @@ def dpt(s,t):
             print ' '.join(["%5d" % M[i,j] for j in range(len(t))])
 
     M = defaultdict(int)
-    gp = -5
     
     for i in range(len(s)):
-        M[i,-1] = M[i-1,-1] + gp
+        M[i,-1] = M[i-1,-1] + gap
     for j in range(len(t)):
-        M[-1,j] = M[-1,j-1] + gp
+        M[-1,j] = M[-1,j-1] + gap
 
     [cost() for i,si in enumerate(s) for j,tj in enumerate(t)]
     # printTable()
@@ -118,15 +117,16 @@ def latex_table():
 if __name__ == '__main__':
     cox = cox3()
     blosum = blosum50()
+    print ", ".join(["%s (%s)" % (i['name'], i['id'].replace('_', '\\_')) for i in animals])
+    gap = -5
     
     #print latex_table()
     
-    if not os.path.isfile('result.pickle'):
+    f = 'result' + str(gap)
+    if not os.path.isfile(f+'.pickle'):
         dist = ([[dpt(cox[i], cox[j]) for j in range(len(cox))] for i in range(len(cox))])
-        dump(dist, file('result.pickle', 'w'))
-    dist = load(file('result.pickle'))
-    
-    
+        dump(dist, file(f+'.pickle', 'w'))
+    dist = load(file(f+'.pickle'))
 
     import pylab
     dendrogram(linkage(dist, 'average'), 30, labels = [a['name'] for a in animals], orientation = "left", color_threshold=300) 

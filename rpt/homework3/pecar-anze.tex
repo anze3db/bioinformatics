@@ -38,20 +38,26 @@ In the third homework we compare COX3 mitochindrial gene between multiple specie
 
 \section{Data}
 
-Data was obtained from GenBank. We downloaded mitochondrial refrence sequences (RefSeq) for Canis lupus familiaris, Carassius auratus auratus, Chamaeleo calyptratus, Daboia russellii, Delphinus capensis, Equus caballus, Gorilla gorilla, Homo sapiens, Homo sapiens neanderthalensis, Pan troglodytes, Pongo abelii, Rattus norvegicus, Sus scrofa in Takifugu rubripes.
+Data was obtained from GenBank. We downloaded mitochondrial refrence sequences (RefSeq) for Gray Wolf (NC\_002008.4), Goldfish (NC\_006580.1), Chameleon (NC\_012420.1), Daboia (NC\_011391.1), Dolphin (NC\_012061.1), Horse (NC\_001640.1), Gorilla (NC\_001645.1), Human (NC\_012920.1), Neanderthal (NC\_011137.1), Chimpanzee (NC\_001643.1), Orangutan (NC\_002083.1), Rat (NC\_001665.2), Boar (NC\_014692.1) and Pufferfish (NC\_004299.1). We used common English names instead of Latin ones, because they are easier to understand.
+
 
 \section{Methods}
 
-We implemented the Needleman-Wunsch algorithm...
+We implemented the Needleman-Wunsch algorithm which performs a global alignment on two sequences. The algorithm is implemented using dynamic programming. 
 
+We used the $BLOSUM50$ amino acid substitution matrix. This is the default scoring used by FASTA and TFASTA for comparison of amino acid sequences.
+
+Choosing different gap penalties didn't produce a significantly different result. As an example if we chose gap penalty of -50 instead of -5, most of the dendrogram remained and only one or two species switched positions (Neanderthal got pushed up a few levels). A gap penalty of -5 seemed to provide us with the best results.
 \section{Results}
 
-\subsection{Table of alignment scores}
 
+
+\subsection{Table of alignment scores}
+Table \ref{scores} lists pairwise alignment scores for all the species.
 \begin{table}[htbp,resetmargins=true]
 \footnotesize
 \caption{Alignment scores}
-\label{kmers}
+\label{scores}
 \begin{center}
 \begin{tabular}{@{}lllllllllllllll@{}}
 \hline
@@ -80,11 +86,13 @@ We implemented the Needleman-Wunsch algorithm...
 
 \subsection{The dendrogram}
 
+Figure \ref{dendro} shows the calculated evolutionary tree. We used average linkage to calculate distances. 
+
 \begin{figure}[h!]
 \begin{center}
-\includegraphics[scale=0.25]{dendro1.png}
-\caption{Dendro.}
-\label{precrec}
+\includegraphics[scale=0.60]{dendro1.png}
+\caption{Dendrogram with avrage linkage}
+\label{dendro}
 \end{center}
 \end{figure}
 

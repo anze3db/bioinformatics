@@ -105,11 +105,23 @@ def dpt(s,t):
     # printTable()
     return M[len(s)-1, len(t)-1]
     
+
+def latex_table():
+    table = [[str(dpt(cox[i], cox[j])) for j in range(0, len(cox))] for i in range(len(cox))]
+    print "".join([" & %d. " % (i+1) for i in range(len(animals))])
+    rows = [" & ".join(i) for i in table]
+    for i,ri in enumerate(rows):
+        print str(i+1)+". " + animals[i]['name'] + " & " + ri + '\\\\'
+
+
 if __name__ == '__main__':
     cox = cox3()
     blosum = blosum50()
     
-    dist = list(chain.from_iterable([[dpt(cox[i], cox[j]) for j in range(i+1, len(cox))] for i in range(len(cox))]))
+    
+    print latex_table()
+    
+    #dist = list(chain.from_iterable([[dpt(cox[i], cox[j]) for j in range(i+1, len(cox))] for i in range(len(cox))]))
 
     import pylab
     dendrogram(linkage(dist, 'average'), 15, labels = [a['name'] for a in animals]) 

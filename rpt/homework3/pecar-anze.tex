@@ -34,62 +34,59 @@ backgroundcolor=\color{light-gray},
 
 \section{Introduction}
 
-In the second homework we analyse the genomic sequence of \textit{Paramecium tetraurelia} and \textit{Emiliania huxleyi virus 86}.
+In the third homework we compare COX3 mitochindrial gene between multiple species and then build an evolutionary tree.
 
 \section{Data}
 
-Data was obtained from GenBank \textit{Nucleotide NC\_006058.1} and \textit{Nucleotide NC\_007346.1}. This time we were interested in protein coding genes. These genes are under \textit{CDS} feature type on GenBank.
+Data was obtained from GenBank. We downloaded mitochondrial refrence sequences (RefSeq) for Canis lupus familiaris, Carassius auratus auratus, Chamaeleo calyptratus, Daboia russellii, Delphinus capensis, Equus caballus, Gorilla gorilla, Homo sapiens, Homo sapiens neanderthalensis, Pan troglodytes, Pongo abelii, Rattus norvegicus, Sus scrofa in Takifugu rubripes.
 
 \section{Methods}
 
-Figuring out which part of the DNA gets transcripted into genes is not an easy endeavour. The first problem that we encounter is the correct direction of the DNA string. Should we read it left to right or vice versa? It turns out that some proteins are transcribed from left to right and some from right to left, which means that we need to check both directions. Because we don't want to write a separate function for each direction we simply reverse and complement the original string. We also need to check for overlapping proteins. Because our codon size is 3 we can have 3 different frames for our open reading frames. If we now combine this with the two possible directions we get a total of 6 frames, where the proteins can be transcripted.
-
-Once we have detected the ORFs we need a method of determining our success rate. In this homework we used the $F1$ score, which is a combination of precision and recall, where precision is defined as 
-\[
-Precision = \frac{TruePositives }{TruePositives + FalsePositives}
-\]
-and recall is defined as
-\[
-Recall = \frac{TruePositives }{TruePositives + FalseNegatives}
-\]
+We implemented the Needleman-Wunsch algorithm...
 
 \section{Results}
 
-\subsection{Detecting open reading frames (ORFs)}
+\subsection{Table of alignment scores}
 
-5081 ORFs code for at least 60 amino acids.
+\begin{table}[htbp,resetmargins=true]
+\caption{Alignment scores}
+\label{kmers}
+\begin{center}
+\begin{tabular}{@{}lllllllllllllll@{}}
+\hline
+ & 1.  & 2.  & 3.  & 4.  & 5.  & 6.  & 7.  & 8.  & 9.  & 10.  & 11.  & 12.  & 13.  & 14.\\
+\hline
 
+1. Gray Wolf & 1832 & 1556 & 1298 & 1381 & 1682 & 1688 & 1577 & 1608 & 1591 & 1603 & 1574 & 1672 & 1671 & 1555\\
+2. Goldfish & 1556 & 1824 & 1305 & 1417 & 1553 & 1564 & 1583 & 1585 & 1580 & 1600 & 1551 & 1552 & 1581 & 1743\\
+3. Veiled Chameleon & 1298 & 1305 & 1827 & 1290 & 1329 & 1312 & 1311 & 1304 & 1289 & 1296 & 1273 & 1322 & 1307 & 1305\\
+4. Daboia & 1381 & 1417 & 1290 & 1796 & 1395 & 1410 & 1422 & 1406 & 1401 & 1409 & 1386 & 1405 & 1400 & 1414\\
+5. Dolphin & 1682 & 1553 & 1329 & 1395 & 1826 & 1685 & 1612 & 1640 & 1621 & 1622 & 1585 & 1628 & 1704 & 1547\\
+6. Horse & 1688 & 1564 & 1312 & 1410 & 1685 & 1815 & 1608 & 1616 & 1610 & 1606 & 1585 & 1658 & 1717 & 1556\\
+7. Gorilla & 1577 & 1583 & 1311 & 1422 & 1612 & 1608 & 1814 & 1764 & 1759 & 1757 & 1727 & 1618 & 1602 & 1542\\
+8. Human & 1608 & 1585 & 1304 & 1406 & 1640 & 1616 & 1764 & 1823 & 1804 & 1777 & 1713 & 1625 & 1621 & 1550\\
+9. Neanderthal & 1591 & 1580 & 1289 & 1401 & 1621 & 1610 & 1759 & 1804 & 1816 & 1772 & 1708 & 1620 & 1602 & 1541\\
+10. Chimpanzee & 1603 & 1600 & 1296 & 1409 & 1622 & 1606 & 1757 & 1777 & 1772 & 1820 & 1703 & 1643 & 1612 & 1564\\
+11. Orangutan & 1574 & 1551 & 1273 & 1386 & 1585 & 1585 & 1727 & 1713 & 1708 & 1703 & 1804 & 1593 & 1588 & 1531\\
+12. Rat & 1672 & 1552 & 1322 & 1405 & 1628 & 1658 & 1618 & 1625 & 1620 & 1643 & 1593 & 1816 & 1645 & 1545\\
+13. Boar & 1671 & 1581 & 1307 & 1400 & 1704 & 1717 & 1602 & 1621 & 1602 & 1612 & 1588 & 1645 & 1814 & 1573\\
+14. Pufferfish & 1555 & 1743 & 1305 & 1414 & 1547 & 1556 & 1542 & 1550 & 1541 & 1564 & 1531 & 1545 & 1573 & 1826\\
 
-\subsection{Precision and recall}
-In Figure \ref{precrec} we can see how precision and recall change depending on the minimum ORF length.
+\hline
+\end{tabular}
+\end{center}
+\end{table}
 
-The values for precision and recall for 125 codons or more are 0.1026 and 0.4017. 
+\subsection{The dendrogram}
 
 \begin{figure}[h!]
 \begin{center}
-\includegraphics[scale=0.65]{precision-recall.png}
-\caption{Precision and recall for Paramecium. Blue line = precision. Green line = recall.}
+\includegraphics[scale=0.25]{dendro1.png}
+\caption{Dendro.}
 \label{precrec}
 \end{center}
 \end{figure}
 
-\subsection{Emiliania huxleyi virus 86}
-
-\subsubsection{Detecting ORFs}
-1434 ORFs code for at least 60 amino acids.
-
-\subsubsection{Precision and recall}
-In Figure \ref{precrec2} we can see how precision and recall change depending on the minimum ORF length.
-\begin{figure}[h!]
-\begin{center}
-\includegraphics[scale=0.65]{precision-recall2.png}
-\caption{Precision and recall in Emiliania huxleyi virus. Blue line = precision. Green line = recall.}
-\label{precrec2}
-\end{center}
-\end{figure}
-The scores for precision and recall for 125 codons or more are \textbf{0.6797} and \textbf{0.6653} respectively. 
-
-It seems the \textit{Emiliania huxleyi virus} gave a considerably better score. I am guessing the reason for this is the fact that a virus is a much simpler organism than the \textit{Paramecium}. The virus only has a few functions that need to be executed and the source code for them is not as complex and thus easier to decode.
 \section*{Honor Code}
 
 % The following paragraph of your report should be included as is - do % not change it.

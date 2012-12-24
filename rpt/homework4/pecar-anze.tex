@@ -34,72 +34,58 @@ backgroundcolor=\color{light-gray},
 
 \section{Introduction}
 
-In the third homework we compare COX3 mitochindrial gene between multiple species and then build an evolutionary tree.
-
-\section{Data}
-
-Data was obtained from GenBank. We downloaded mitochondrial refrence sequences (RefSeq) for Gray Wolf (NC\_002008.4), Goldfish (NC\_006580.1), Chameleon (NC\_012420.1), Daboia (NC\_011391.1), Dolphin (NC\_012061.1), Horse (NC\_001640.1), Gorilla (NC\_001645.1), Human (NC\_012920.1), Neanderthal (NC\_011137.1), Chimpanzee (NC\_001643.1), Orangutan (NC\_002083.1), Rat (NC\_001665.2), Boar (NC\_014692.1) and Pufferfish (NC\_004299.1). We used common English names instead of Latin ones, because they are easier to understand.
-
+In homework \#4 we try to predict regions where RNA polymerase II binds to the DNA. We do this by implementing an algorithm that constructs a hidden Markov model and predict the polymerase presence with the Viterbi algorithm. 
 
 \section{Methods}
 
-We implemented the Needleman-Wunsch algorithm which performs a global alignment on two sequences. The algorithm is implemented using dynamic programming. 
-
-We used the $BLOSUM50$ amino acid substitution matrix. This is the default scoring used by FASTA and TFASTA for comparison of amino acid sequences.
-
-Choosing different gap penalties didn't produce a significantly different result. As an example if we chose gap penalty of -50 instead of -5, most of the dendrogram remained and only one or two species switched positions (Neanderthal got pushed up a few levels). A gap penalty of -5 seemed to provide us with the best results.
+\begin{description}
+    \item[Viterbi] We have tried many versions of the Viterbi algorithm with little success. The problem with this approach is that the probabilities become too small when the sequence is longer.
+    	\item[Viterbi log] Instead of multiplying probabilities we sum up their logs. We have tried implementing an algorithm based on the implementation from wikipedia and from Refrence \cite{icg}, but results weren't as good as Bayes.
+    	\item[Forward] We have also implemented the forward algorithm from Refrence \cite{icg}. The results were not better than Bayes.
+    	\item[Bayes] In order to evaluate other features we used the NaiveBayes learner from Orange. Predicting polymerase II presence was done by comparing probabilities, the hidden state with the highest probability was chosen.
+    	\item[Bayes Average] Because "absent presence" is never chosen by the basic Bayes method, we calculate the average probability for each hidden state. If the probability of one state is above it's average it can be chosen.   
+    	\item[Bayes Mediana] Instead of comparing to average probability we tried comparing the median probability. With this we managed to predict some absent (1) presence but the overall score was lower than Bayes and Bayes Average.
+    	\item[RandomForest] Beside NaiveBayes we also tried the RandomForest learner. We used the same method for classification as with the Bayes learner, but the score was not as good.
+\end{description}
 \section{Results}
 
+In Table \ref{scores} we can see our Kaggle results. We have not submitted results for Viterbi log and forward algorithms as the resulting file would definitely score lower.
 
-
-\subsection{Table of alignment scores}
-Table \ref{scores} lists pairwise alignment scores for all the species.
 \begin{table}[htbp,resetmargins=true]
-\footnotesize
-\caption{Alignment scores}
+\caption{Kaggle scores}
 \label{scores}
 \begin{center}
-\begin{tabular}{@{}lllllllllllllll@{}}
-\hline
- & 1.  & 2.  & 3.  & 4.  & 5.  & 6.  & 7.  & 8.  & 9.  & 10.  & 11.  & 12.  & 13.  & 14.\\
+\begin{tabular}{@{}rlrl@{}}
+
+Submission n. & Method & Result & Comment \\
 \hline
 
-1. Gray Wolf & 1832 & 1556 & 1298 & 1381 & 1682 & 1688 & 1577 & 1608 & 1591 & 1603 & 1574 & 1672 & 1671 & 1555\\
-2. Goldfish & 1556 & 1824 & 1305 & 1417 & 1553 & 1564 & 1583 & 1585 & 1580 & 1600 & 1551 & 1552 & 1581 & 1743\\
-3. Veiled Chameleon & 1298 & 1305 & 1827 & 1290 & 1329 & 1312 & 1311 & 1304 & 1289 & 1296 & 1273 & 1322 & 1307 & 1305\\
-4. Daboia & 1381 & 1417 & 1290 & 1796 & 1395 & 1410 & 1422 & 1406 & 1401 & 1409 & 1386 & 1405 & 1400 & 1414\\
-5. Dolphin & 1682 & 1553 & 1329 & 1395 & 1826 & 1685 & 1612 & 1640 & 1621 & 1622 & 1585 & 1628 & 1704 & 1547\\
-6. Horse & 1688 & 1564 & 1312 & 1410 & 1685 & 1815 & 1608 & 1616 & 1610 & 1606 & 1585 & 1658 & 1717 & 1556\\
-7. Gorilla & 1577 & 1583 & 1311 & 1422 & 1612 & 1608 & 1814 & 1764 & 1759 & 1757 & 1727 & 1618 & 1602 & 1542\\
-8. Human & 1608 & 1585 & 1304 & 1406 & 1640 & 1616 & 1764 & 1823 & 1804 & 1777 & 1713 & 1625 & 1621 & 1550\\
-9. Neanderthal & 1591 & 1580 & 1289 & 1401 & 1621 & 1610 & 1759 & 1804 & 1816 & 1772 & 1708 & 1620 & 1602 & 1541\\
-10. Chimpanzee & 1603 & 1600 & 1296 & 1409 & 1622 & 1606 & 1757 & 1777 & 1772 & 1820 & 1703 & 1643 & 1612 & 1564\\
-11. Orangutan & 1574 & 1551 & 1273 & 1386 & 1585 & 1585 & 1727 & 1713 & 1708 & 1703 & 1804 & 1593 & 1588 & 1531\\
-12. Rat & 1672 & 1552 & 1322 & 1405 & 1628 & 1658 & 1618 & 1625 & 1620 & 1643 & 1593 & 1816 & 1645 & 1545\\
-13. Boar & 1671 & 1581 & 1307 & 1400 & 1704 & 1717 & 1602 & 1621 & 1602 & 1612 & 1588 & 1645 & 1814 & 1573\\
-14. Pufferfish & 1555 & 1743 & 1305 & 1414 & 1547 & 1556 & 1542 & 1550 & 1541 & 1564 & 1531 & 1545 & 1573 & 1826\\
+1 & Viterbi & 0.48911 & Viterbi \\
+2 & Bayes & 0.68788& Normal Bayes \\
+3 & Bayes Average & 0.67975 & Bayes with averages \\
+4 & Bayes Mediana & 0.60958 & Bayes with mediana \\
+5 & Forest &  0.65413 & Random forest with 100 trees \\
 
-\hline
 \end{tabular}
 \end{center}
 \end{table}
 
-\subsection{The dendrogram}
+\section{Conclusion}
 
-Figure \ref{dendro} shows the calculated evolutionary tree. We used average linkage to calculate distances. 
-
-\begin{figure}[h!]
-\begin{center}
-\includegraphics[scale=0.60]{dendro1.png}
-\caption{Dendrogram with avrage linkage}
-\label{dendro}
-\end{center}
-\end{figure}
+The simplest of all algorithms ended up being the best. When we added extra complexity (either by using RandomForrest or by using average/median probabilities with Bayes) the score ended up being lower. We have made a total of 7 submissions.
 
 \section*{Honor Code}
 
 % The following paragraph of your report should be included as is - do % not change it.
 
 My answers to homework are my own work. I did not make solutions or code available to anyone else. I did not engage in any other activities that will dishonestly improve my results or dishonestly improve/hurt the results of others.
+
+
+\begin{thebibliography}{1}
+\bibitem{icg}
+Nello Cristianini, Matthew W. Hahn (2007) Introduction to computational genomics: A case study approach, Cambridge University Press, Cambridge, UK.
+
+
+\end{thebibliography}
 
 \end{document}

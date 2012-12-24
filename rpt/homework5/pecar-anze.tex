@@ -1,0 +1,91 @@
+% Homework report template for courses lectured by Blaz Zupan.
+% For more on LaTeX please consult its documentation pages, or
+% read tutorials like http://tobi.oetiker.ch/lshort/lshort.pdf.
+%
+% Use pdflatex to produce a PDF of a report.
+
+\documentclass[a4paper,11pt]{article}
+\usepackage{a4wide}
+\usepackage{fullpage}
+\usepackage[utf8x]{inputenc}
+\usepackage[toc,page]{appendix}
+\usepackage[pdftex]{graphicx} % for figures
+\usepackage{setspace}
+\usepackage{color}
+\definecolor{light-gray}{gray}{0.95}
+\usepackage{listings} % for inclusion of Python code
+\usepackage{hyperref}
+\renewcommand{\baselinestretch}{1.2}
+
+\lstset{ % style for Python code, improve if needed
+language=Python,
+basicstyle=\footnotesize,
+basicstyle=\ttfamily\footnotesize\setstretch{1},
+backgroundcolor=\color{light-gray},
+}
+
+\title{Homework \#4: Predicting the Presence of RNA Polymerase II}
+\author{Anže Pečar (63060257)}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+In homework \#4 we try to predict regions where RNA polymerase II binds to the DNA. We do this by implementing an algorithm that constructs a hidden Markov model and predict the polymerase presence with the Viterbi algorithm. 
+
+\section{Methods}
+
+\begin{description}
+    \item[Viterbi] We have tried many versions of the Viterbi algorithm with little success. The problem with this approach is that the probabilities become too small when the sequence is longer.
+    	\item[Viterbi log] Instead of multiplying probabilities we sum up their logs. We have tried implementing an algorithm based on the implementation from wikipedia and from Refrence \cite{icg}, but results weren't as good as Bayes.
+    	\item[Forward] We have also implemented the forward algorithm from Refrence \cite{icg}. The results were not better than Bayes.
+    	\item[Bayes] In order to evaluate other features we used the NaiveBayes learner from Orange. Predicting polymerase II presence was done by comparing probabilities, the hidden state with the highest probability was chosen.
+    	\item[Bayes Average] Because "absent presence" is never chosen by the basic Bayes method, we calculate the average probability for each hidden state. If the probability of one state is above it's average it can be chosen.   
+    	\item[Bayes Mediana] Instead of comparing to average probability we tried comparing the median probability. With this we managed to predict some absent (1) presence but the overall score was lower than Bayes and Bayes Average.
+    	\item[RandomForest] Beside NaiveBayes we also tried the RandomForest learner. We used the same method for classification as with the Bayes learner, but the score was not as good.
+\end{description}
+\section{Results}
+
+In Table \ref{scores} we can see our Kaggle results. We have not submitted results for Viterbi log and forward algorithms as the resulting file would definitely score lower.
+
+\begin{table}[htbp,resetmargins=true]
+\caption{Kaggle scores}
+\label{scores}
+\begin{center}
+\begin{tabular}{@{}rlrl@{}}
+
+Submission n. & Method & Result & Comment \\
+\hline
+
+1 & Viterbi & 0.48911 & Viterbi \\
+2 & Bayes & 0.68788& Normal Bayes \\
+3 & Bayes Average & 0.67975 & Bayes with averages \\
+4 & Bayes Mediana & 0.60958 & Bayes with mediana \\
+5 & Forest &  0.65413 & Random forest with 100 trees \\
+
+\end{tabular}
+\end{center}
+\end{table}
+
+\section{Conclusion}
+
+The simplest of all algorithms ended up being the best. When we added extra complexity (either by using RandomForrest or by using average/median probabilities with Bayes) the score ended up being lower. We have made a total of 7 submissions.
+
+\section*{Honor Code}
+
+% The following paragraph of your report should be included as is - do % not change it.
+
+My answers to homework are my own work. I did not make solutions or code available to anyone else. I did not engage in any other activities that will dishonestly improve my results or dishonestly improve/hurt the results of others.
+
+
+\begin{thebibliography}{1}
+\bibitem{icg}
+Nello Cristianini, Matthew W. Hahn (2007) Introduction to computational genomics: A case study approach, Cambridge University Press, Cambridge, UK.
+
+
+\end{thebibliography}
+
+\end{document}

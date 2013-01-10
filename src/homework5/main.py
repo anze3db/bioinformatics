@@ -17,12 +17,11 @@ if __name__ == '__main__':
     ngenes = defaultdict(int)
     nclusters = defaultdict(int)
     draw_labels = defaultdict(int)
-    for d in database[:4000]:
+    for d in database[:2000]:
         fields = d.strip().split('|')
         start = re.search('[A-Za-z]', fields[0]).start()
-        end = re.search('[A-Za-z \-]*', fields[0][start:]).end() # TODO: ending dash?
+        end = re.search('((\-[A-Za-z])|([A-Za-z]))*', fields[0][start:]).end()
         name = fields[0][start:start+end].strip()
-        
         genes[name] = genes[name].union(set(fields[1].split(', ')))
         ngenes[name] += len(genes[name])
         

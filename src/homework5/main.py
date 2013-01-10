@@ -9,21 +9,43 @@ import pylab
 import random
 import re
 import sys
+
+
+
 if __name__ == '__main__':
+    
+    def draw_graph(cluster=None):
+        nodes = G.nodes() if cluster == None else [n for n in G.nodes() if cluster_labels[n] == cluster_labels[cluster]]
+        
+        
+        
+        nx.draw_networkx_nodes(G, pos, nodes,
+            node_size=[ (ngenes[a]) for a in nodes],
+            node_color=[ nclusters[a] for a in nodes],
+            linewidths=1,
+            alpha=0.4)  # just because the colors are dark
+        
+        labels = shown_labels if cluster == None else dict((n,n) for n in G.nodes() if cluster_labels[n] == cluster_labels[cluster])
+        
+        nx.draw_networkx_labels(G, pos, labels)
+        
+        edges = G.edges() if cluster==None else [e for e in G.edges() if cluster_labels[e[0]] == cluster_labels[cluster] and cluster_labels[e[1]] == cluster_labels[cluster]]
+        nx.draw_networkx_edges(G, pos, edges, alpha=0.2, width=0.3)
+        pylab.axis("off")
+        pylab.show()
+        
     database = open('morbidmap').readlines()
     
     # 1.Create the network
     
     G = nx.Graph()
     genes = defaultdict(set)
-    ngenes = defaultdict(int)
     for d in database[:2000]:
         fields = d.strip().split('|')
         start = re.search('[A-Za-z]', fields[0]).start()
-        end = re.search('((\-[A-Za-z])|([A-Za-z]))*', fields[0][start:]).end()
+        end = re.search('((\-[A-Za-z])|([A-Za-z ]))*', fields[0][start:]).end()
         name = fields[0][start:start + end].strip()
         genes[name] = genes[name].union(set(fields[1].split(', ')))
-        ngenes[name] += len(genes[name])
         
         if name not in G:
             G.add_node(name, new_name=name)
@@ -33,9 +55,6 @@ if __name__ == '__main__':
             if len(genes[name].intersection(genes[n])) > 0:
                 G.add_edge(name, n)
         
-                
-    ngenes = {n:float(ngenes[n]) / max(ngenes[n] for n in ngenes) * 10000 for n in ngenes}  # Normalize number of genes
-
     # 2. Analyze the network [TODO]
         
     conn_comp = [len(c) for c in nx.connected_component_subgraphs(G)]
@@ -64,11 +83,14 @@ if __name__ == '__main__':
 #    pylab.title("TODO")
     # pylab.show()
     
-    
+    G = nx.connected_component_subgraphs(G)[0]
+         
+    ngenes = {n:len(genes[n]) for n in genes}  # Normalize number of genes
+
     # 3. Clustering
     
     cluster_labels = {g:g for g in G.nodes()}
-    G = nx.connected_component_subgraphs(G)[0]
+    
     for i in range(100):
         nodes = G.nodes()
         random.shuffle(nodes)
@@ -84,29 +106,11 @@ if __name__ == '__main__':
     nclusters = {l:unique_labels.index(cluster_labels[l]) for l in cluster_labels}
     
     # labels to be shown:
-    onlyclusters = {}
-    for p in pos:
-        if ngenes[p] == max(ngenes[n] for n in ngenes if cluster_labels[n] == cluster_labels[p]):
-            onlyclusters[p] = pos[p]
-        else:
-            onlyclusters[p] = [-100, -100] # remove the label from screen
+    shown_labels = dict((n,n) for n in G.nodes() if ngenes[n] == max(ngenes[g] for g in ngenes if g in cluster_labels and cluster_labels[g] == cluster_labels[n]))
 
-    nodes = G.nodes()  # fix node positions
-    nx.draw_networkx_nodes(G, pos, nodes,
-        node_size=[ (ngenes[a]) for a in nodes],
-        node_color=[ nclusters[a] for a in nodes ],
-        linewidths=1,
-        alpha=0.4)  # just because the colors are dark
-    
-    
-    nx.draw_networkx_labels(G, onlyclusters)
-    nx.draw_networkx_edges(G, pos, alpha=0.2, width=0.3)
-    # pylab.figure(1)
-    pylab.axis("off")
-    pylab.show()
-    # pylab.savefig("nicer.pdf")
-    
-        
-    # 4. Extract clusters [TODO]
-    
+    draw_graph()
+    # 4. Extract clusters
+    draw_graph('Deafness')
+    draw_graph('Breast cancer')
+    draw_graph('Diabetes mellitus')
     

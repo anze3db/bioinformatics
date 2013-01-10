@@ -20,7 +20,7 @@ if __name__ == '__main__':
         
         
         nx.draw_networkx_nodes(G, pos, nodes,
-            node_size=[ (ngenes[a]) for a in nodes],
+            node_size=[ (ngenes[a])* 10 if cluster == None else (ngenes[a])*100 for a in nodes],
             node_color=[ nclusters[a] for a in nodes],
             linewidths=1,
             alpha=0.4)  # just because the colors are dark
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     
     G = nx.Graph()
     genes = defaultdict(set)
-    for d in database[:2000]:
+    for d in database:
         fields = d.strip().split('|')
         start = re.search('[A-Za-z]', fields[0]).start()
         end = re.search('((\-[A-Za-z])|([A-Za-z ]))*', fields[0][start:]).end()
@@ -59,32 +59,32 @@ if __name__ == '__main__':
         
     conn_comp = [len(c) for c in nx.connected_component_subgraphs(G)]
     
-#    pylab.bar(range(len(conn_comp)), conn_comp)
-#    pylab.figure(1)
-#    pylab.yscale('log')
-#    pylab.xlabel("Distribution of sizes of connected components")
-#    pylab.ylabel("TODO")
-#    pylab.title("TODO")
-    # pylab.show()
+    pylab.bar(range(len(conn_comp)), [math.log(c) for c in conn_comp])
+    pylab.figure(1)
+    #pylab.yscale('log')
+    pylab.xlabel("Distribution of sizes of connected components")
+    pylab.ylabel("TODO")
+    pylab.title("TODO")
+    pylab.show()
         
-#    hist = nx.degree_histogram(G)
-#    pylab.figure(2)
-#    pylab.subplot(121)
-#    pylab.bar(range(len(hist)), hist, lw=1)
-#    pylab.xlabel("Degree distribution of the network ")
-#    pylab.ylabel("TODO")
-#    pylab.title("TODO")
-#    
-#    pylab.subplot(122)
-#    pylab.bar(range(len(hist)), [log(h+1) for h in hist])
-#
-#    pylab.xlabel("Degree distribution of the network (log)")
-#    pylab.ylabel("TODO")
-#    pylab.title("TODO")
-    # pylab.show()
+    hist = nx.degree_histogram(G)
+    pylab.figure(2)
+    pylab.subplot(121)
+    pylab.bar(range(len(hist)), hist, lw=1)
+    pylab.xlabel("Degree distribution of the network ")
+    pylab.ylabel("TODO")
+    pylab.title("TODO")
     
+    pylab.subplot(122)
+    pylab.bar(range(len(hist)), [log(h+1) for h in hist])
+
+    pylab.xlabel("Degree distribution of the network (log)")
+    pylab.ylabel("TODO")
+    pylab.title("TODO")
+    pylab.show()
     G = nx.connected_component_subgraphs(G)[0]
-         
+    print "The diameter of the largest connected component: %2d" % nx.diameter(G)
+    sys.exit()
     ngenes = {n:len(genes[n]) for n in genes}  # Normalize number of genes
 
     # 3. Clustering
@@ -100,13 +100,14 @@ if __name__ == '__main__':
                 cluster_labels[n] = c.most_common(1)[0][0] 
     unique_labels = list(set(cluster_labels[l] for l in cluster_labels))
     
-    pos = nx.spring_layout(G, iterations=500)
+    pos = nx.spring_layout(G, iterations=2000)
     
     # set cluster colors:
     nclusters = {l:unique_labels.index(cluster_labels[l]) for l in cluster_labels}
     
     # labels to be shown:
-    shown_labels = dict((n,n) for n in G.nodes() if ngenes[n] == max(ngenes[g] for g in ngenes if g in cluster_labels and cluster_labels[g] == cluster_labels[n]))
+    
+    shown_labels = dict((n,n) for n in G.nodes() if ngenes[n] == max(ngenes[g] for g in ngenes if g in cluster_labels and cluster_labels[g] == cluster_labels[n]) and ngenes[n] > 40)
 
     draw_graph()
     # 4. Extract clusters

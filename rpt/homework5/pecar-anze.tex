@@ -34,44 +34,15 @@ backgroundcolor=\color{light-gray},
 
 \section{Introduction}
 
-In homework \#5 we build a network of diseases from the OMIM database. We use a network clustering algorithm by Raghavan et al and the help of the networkx library.
+In homework \#5 we build a network of diseases from the OMIM database. We use a network clustering algorithm by Raghavan et al and the python networkx library.
+
+\section{Data}
+
 \section{Methods}
 
-\begin{description}
-    \item[Viterbi] We have tried many versions of the Viterbi algorithm with little success. The problem with this approach is that the probabilities become too small when the sequence is longer.
-    	\item[Viterbi log] Instead of multiplying probabilities we sum up their logs. We have tried implementing an algorithm based on the implementation from wikipedia and from Refrence \cite{icg}, but results weren't as good as Bayes.
-    	\item[Forward] We have also implemented the forward algorithm from Refrence \cite{icg}. The results were not better than Bayes.
-    	\item[Bayes] In order to evaluate other features we used the NaiveBayes learner from Orange. Predicting polymerase II presence was done by comparing probabilities, the hidden state with the highest probability was chosen.
-    	\item[Bayes Average] Because "absent presence" is never chosen by the basic Bayes method, we calculate the average probability for each hidden state. If the probability of one state is above it's average it can be chosen.   
-    	\item[Bayes Mediana] Instead of comparing to average probability we tried comparing the median probability. With this we managed to predict some absent (1) presence but the overall score was lower than Bayes and Bayes Average.
-    	\item[RandomForest] Beside NaiveBayes we also tried the RandomForest learner. We used the same method for classification as with the Bayes learner, but the score was not as good.
-\end{description}
 \section{Results}
 
-In Table \ref{scores} we can see our Kaggle results. We have not submitted results for Viterbi log and forward algorithms as the resulting file would definitely score lower.
-
-\begin{table}[htbp,resetmargins=true]
-\caption{Kaggle scores}
-\label{scores}
-\begin{center}
-\begin{tabular}{@{}rlrl@{}}
-
-Submission n. & Method & Result & Comment \\
-\hline
-
-1 & Viterbi & 0.48911 & Viterbi \\
-2 & Bayes & 0.68788& Normal Bayes \\
-3 & Bayes Average & 0.67975 & Bayes with averages \\
-4 & Bayes Mediana & 0.60958 & Bayes with mediana \\
-5 & Forest &  0.65413 & Random forest with 100 trees \\
-
-\end{tabular}
-\end{center}
-\end{table}
-
 \section{Conclusion}
-
-The simplest of all algorithms ended up being the best. When we added extra complexity (either by using RandomForrest or by using average/median probabilities with Bayes) the score ended up being lower. We have made a total of 7 submissions.
 
 \section*{Honor Code}
 

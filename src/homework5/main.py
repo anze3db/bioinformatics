@@ -73,23 +73,20 @@ if __name__ == '__main__':
     G = nx.connected_component_subgraphs(G)[0]
     cluster_labels = {g:g for g in G.nodes()}
     for i in range(100):
-        newG = nx.Graph()
         nodes = G.nodes()
         random.shuffle(nodes)
         for n in nodes:
-            neighbors = G.neighbors(n)
-            c = Counter(cluster_labels[nei] for nei in neighbors)
+            c = Counter(cluster_labels[n] for n in G.neighbors(n))
             if len(c.most_common(1)) > 0: 
-                new_label = c.most_common(1)[0][0] 
-                cluster_labels[n] = new_label
-                
+                cluster_labels[n] = c.most_common(1)[0][0] 
+    unique_labels = list(set(cluster_labels[l] for l in cluster_labels))
+    
     # 4. Extract clusters [TODO]
     
     pos = nx.spring_layout(G, iterations=500)
     
-    for l in cluster_labels:
-        nclusters[l] = sum(ord(i) for i in cluster_labels[l]) % 255  # len(cluster_labels[l])
-        draw_labels[cluster_labels[l]] += 1
+    # set cluster colors:
+    nclusters = {l:unique_labels.index(cluster_labels[l]) for l in cluster_labels}
         
     
     onlyclusters = {}

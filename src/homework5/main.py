@@ -17,8 +17,6 @@ if __name__ == '__main__':
     G = nx.Graph()
     genes = defaultdict(set)
     ngenes = defaultdict(int)
-    nclusters = defaultdict(int)
-    draw_labels = defaultdict(int)
     for d in database[:2000]:
         fields = d.strip().split('|')
         start = re.search('[A-Za-z]', fields[0]).start()
@@ -36,8 +34,7 @@ if __name__ == '__main__':
                 G.add_edge(name, n)
         
                 
-        nclusters[name] = 0
-    ngenes = {n:float(ngenes[n]) / max(ngenes[n] for n in ngenes) * 1000 for n in ngenes}  # Normalize number of genes
+    ngenes = {n:float(ngenes[n]) / max(ngenes[n] for n in ngenes) * 10000 for n in ngenes}  # Normalize number of genes
 
     # 2. Analyze the network [TODO]
         
@@ -70,8 +67,8 @@ if __name__ == '__main__':
     
     # 3. Clustering
     
-    G = nx.connected_component_subgraphs(G)[0]
     cluster_labels = {g:g for g in G.nodes()}
+    G = nx.connected_component_subgraphs(G)[0]
     for i in range(100):
         nodes = G.nodes()
         random.shuffle(nodes)
@@ -81,20 +78,18 @@ if __name__ == '__main__':
                 cluster_labels[n] = c.most_common(1)[0][0] 
     unique_labels = list(set(cluster_labels[l] for l in cluster_labels))
     
-    # 4. Extract clusters [TODO]
-    
     pos = nx.spring_layout(G, iterations=500)
     
     # set cluster colors:
     nclusters = {l:unique_labels.index(cluster_labels[l]) for l in cluster_labels}
-        
     
+    # labels to be shown:
     onlyclusters = {}
     for p in pos:
-        if draw_labels[p] > 15:
+        if ngenes[p] == max(ngenes[n] for n in ngenes if cluster_labels[n] == cluster_labels[p]):
             onlyclusters[p] = pos[p]
         else:
-            onlyclusters[p] = [-100, -100]
+            onlyclusters[p] = [-100, -100] # remove the label from screen
 
     nodes = G.nodes()  # fix node positions
     nx.draw_networkx_nodes(G, pos, nodes,
@@ -102,9 +97,6 @@ if __name__ == '__main__':
         node_color=[ nclusters[a] for a in nodes ],
         linewidths=1,
         alpha=0.4)  # just because the colors are dark
-    # print [n for n in nclusters if n > 1]
-    # print pos
-    # print {p:pos[p] for p in pos if nclusters[p] > 1}
     
     
     nx.draw_networkx_labels(G, onlyclusters)
@@ -113,3 +105,8 @@ if __name__ == '__main__':
     pylab.axis("off")
     pylab.show()
     # pylab.savefig("nicer.pdf")
+    
+        
+    # 4. Extract clusters [TODO]
+    
+    

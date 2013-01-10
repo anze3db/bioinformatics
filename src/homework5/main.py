@@ -1,12 +1,14 @@
-import re
-import networkx as nx
-import pylab
+from IPython.core.display import Math
 from collections import defaultdict, Counter
 from math import log
-import sys
-import random
-from IPython.core.display import Math
+from numpy import median
 import math
+import networkx as nx
+import numpy
+import pylab
+import random
+import re
+import sys
 if __name__ == '__main__':
     database = open('morbidmap').readlines()
     
@@ -35,7 +37,8 @@ if __name__ == '__main__':
         
                 
         nclusters[name] = 0
-        
+    ngenes = {n:float(ngenes[n])/max(ngenes[n] for n in ngenes)*1000 for n in ngenes} # Normalize number of genes
+
     # 2. Analyze the network [TODO]
         
     conn_comp = [len(c) for c in nx.connected_component_subgraphs(G)]
@@ -65,7 +68,7 @@ if __name__ == '__main__':
     #pylab.show()
     
     
-    # 3. Clustering [TODO]
+    # 3. Clustering
     
     G=nx.connected_component_subgraphs(G)[0]
     cluster_labels = {g:g for g in G.nodes()}
@@ -98,7 +101,7 @@ if __name__ == '__main__':
 
     nodes = G.nodes() #fix node positions
     nx.draw_networkx_nodes(G, pos, nodes,
-        node_size = [ (ngenes[a])*0.8 for a in nodes],
+        node_size = [ (ngenes[a]) for a in nodes],
         node_color = [ nclusters[a] for a in nodes ],
         linewidths = 1,
         alpha=0.4) #just because the colors are dark

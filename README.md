@@ -1,4 +1,4 @@
-Homework for the bioinformatics class
+The bioinformatics class
 -------------------------------------
 
 Main topics:

@@ -1,14 +1,10 @@
-from IPython.core.display import Math
 from collections import defaultdict, Counter
 from math import log
-from numpy import median
 import math
 import networkx as nx
-import numpy
 import pylab
 import random
 import re
-import sys
 
 
 
@@ -55,16 +51,14 @@ if __name__ == '__main__':
             if len(genes[name].intersection(genes[n])) > 0:
                 G.add_edge(name, n)
         
-    # 2. Analyze the network [TODO]
+    # 2. Analyze the network
         
     conn_comp = [len(c) for c in nx.connected_component_subgraphs(G)]
-    
     pylab.bar(range(len(conn_comp)), [math.log(c) for c in conn_comp])
     pylab.figure(1)
     #pylab.yscale('log')
     pylab.xlabel("Distribution of sizes of connected components")
-    pylab.ylabel("TODO")
-    pylab.title("TODO")
+    pylab.ylabel("Log of sizes")
     pylab.show()
         
     hist = nx.degree_histogram(G)
@@ -72,26 +66,23 @@ if __name__ == '__main__':
     pylab.subplot(121)
     pylab.bar(range(len(hist)), hist, lw=1)
     pylab.xlabel("Degree distribution of the network ")
-    pylab.ylabel("TODO")
-    pylab.title("TODO")
+    pylab.ylabel("Degree")
     
     pylab.subplot(122)
     pylab.bar(range(len(hist)), [log(h+1) for h in hist])
 
     pylab.xlabel("Degree distribution of the network (log)")
-    pylab.ylabel("TODO")
-    pylab.title("TODO")
+    pylab.ylabel("Log of degree")
     pylab.show()
     G = nx.connected_component_subgraphs(G)[0]
     print "The diameter of the largest connected component: %2d" % nx.diameter(G)
-    sys.exit()
     ngenes = {n:len(genes[n]) for n in genes}  # Normalize number of genes
 
     # 3. Clustering
     
     cluster_labels = {g:g for g in G.nodes()}
     
-    for i in range(100):
+    for i in range(200):
         nodes = G.nodes()
         random.shuffle(nodes)
         for n in nodes:
